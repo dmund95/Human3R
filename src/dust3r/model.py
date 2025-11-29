@@ -24,6 +24,7 @@ from dust3r.utils.misc import (
     interleave,
     transpose_to_landscape,
 )
+import omegaconf.dictconfig
 from dust3r.heads import head_factory
 from dust3r.utils.camera import PoseEncoder
 from dust3r.patch_embed import get_patch_embed
@@ -100,7 +101,8 @@ def strip_module_mhmr(state_dict):
 def load_model(model_path, device, verbose=True):
     if verbose:
         print("... loading model from", model_path)
-    ckpt = torch.load(model_path, map_location="cpu")
+    torch.serialization.add_safe_globals([omegaconf.dictconfig.DictConfig])
+    ckpt = torch.load(model_path, weights_only=False, map_location="cpu")
     args = ckpt["args"].model.replace(
         "ManyAR_PatchEmbed", "PatchEmbedDust3R"
     )  # ManyAR only for aspect ratio not consistent

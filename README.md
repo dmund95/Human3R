@@ -37,15 +37,16 @@ cd Human3R
 
 2. Create the environment.
 ```bash
-conda create -n human3r python=3.11 cmake
+conda create -n human3r python=3.12 cmake
 conda activate human3r
-conda install pytorch torchvision pytorch-cuda=12.4 -c pytorch -c nvidia  # use the correct version of cuda for your system
+pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu130
 pip install -r requirements.txt
+pip install --no-build-isolation git+https://github.com/mattloper/chumpy@9b045ff5d6588a24a0bab52c83f032e2ba433e17
 # issues with pytorch dataloader, see https://github.com/pytorch/pytorch/issues/99625
 conda install 'llvm-openmp<16'
 # for training logging
-conda install -y gcc_linux-64 gxx_linux-64
-pip install git+https://github.com/nerfstudio-project/gsplat.git
+conda install -c conda-forge gcc_linux-aarch64=10 gxx_linux-aarch64=10
+export CPATH=/usr/local/cuda/include/cccl/:$CPATH && export CUDA_HOME=/usr/local/cuda && pip install --no-build-isolation git+https://github.com/nerfstudio-project/gsplat.git
 # for evaluation
 pip install evo
 pip install open3d
